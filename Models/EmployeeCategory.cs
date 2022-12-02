@@ -2,7 +2,7 @@
 
 namespace Test_Projekat_Web.Models
 {
-    public class WorkerCategory
+    public class EmployeeCategory
     {
         [Key]
         public int Id { get; set; }
@@ -14,7 +14,7 @@ namespace Test_Projekat_Web.Models
         public string RadnaPozicija { get; set; }
         public int NetoPlata { get; set; }
         [Required]
-        public string BrutoPlata { get; set; }
+        public int BrutoPlata { get; set; }
         public string SiteVersion { get; set; } = "0.1(TechDemo)";
         public DateTime DatumKreiranja { get; set; } = DateTime.Now;
     }
