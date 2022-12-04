@@ -22,13 +22,12 @@ namespace TestProjekatWeb.Migrations
                     RadnaPozicija = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NetoPlata = table.Column<int>(type: "int", nullable: false),
                     BrutoPlata = table.Column<int>(type: "int", nullable: false),
-                    SiteVersion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatumKreiranja = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DatumZaposlenja = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EmployeeCategories", x => x.Id);
-                });
+                });;
         }
 
         /// <inheritdoc />
