@@ -19,10 +19,12 @@ namespace TestProjekatWeb.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Prezime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Adresa = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RadnaPozicija = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NetoPlata = table.Column<int>(type: "int", nullable: false),
-                    BrutoPlata = table.Column<int>(type: "int", nullable: false),
-                    DatumZaposlenja = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    NetoPlata_RSD = table.Column<int>(type: "int", nullable: false),
+                    NetoPlata_EUR = table.Column<int>(type: "int", nullable: false),
+                    NetoPlata_USD = table.Column<int>(type: "int", nullable: false),
+                    BrutoPlata_RSD = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {

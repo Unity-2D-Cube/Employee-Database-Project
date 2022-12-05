@@ -11,11 +11,15 @@ namespace Test_Projekat_Web.Models
         [Required]
         public string ? Prezime { get; set; }
         [Required]
-        public string ? RadnaPozicija { get; set; }
-        public int NetoPlata { get; set; }
+        public string ? Adresa { get; set; }
         [Required]
-        public int BrutoPlata { get; set; }
-
-        public DateTime DatumZaposlenja { get; set; } = DateTime.Now;
+        public string ? RadnaPozicija { get; set; }
+        public int NetoPlata_RSD { get; set; }
+        [Required]
+        public int NetoPlata_EUR { get; set; }
+        [Required]
+        public int NetoPlata_USD { get; set; }
+        [Required]
+        public int BrutoPlata_RSD { get; set; }
     }
 }

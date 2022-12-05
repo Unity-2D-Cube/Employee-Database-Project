@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Test_Projekat_Web.Data;
+using Test_Projekat_Web.Models;
 
 namespace Test_Projekat_Web.Controllers
 {
@@ -15,8 +16,14 @@ namespace Test_Projekat_Web.Controllers
 
         public IActionResult Index()
         {
-            var objEmployeeCategoryList = _db.EmployeeCategories.ToList();
+            IEnumerable<EmployeeCategory> objEmployeeCategoryList = _db.EmployeeCategories;
 
+            return View(objEmployeeCategoryList);
+        }
+
+        //GET
+        public IActionResult Create()
+        {
             return View();
         }
     }

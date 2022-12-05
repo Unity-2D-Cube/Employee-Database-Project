@@ -1,0 +1,29 @@
+﻿@model EmployeeCategory
+<form method="post">
+    <div class="border-4 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary text-light">Dodaj Zaposlenog</h2>
+        </div>
+        <hr />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Ime"></label>
+        <input asp-for="Ime" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Prezime</label>
+        <input asp-for="Prezime" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Adresa</label>
+        <input asp-for="Adresa" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Radna Pozicija</label>
+        <input asp-for="RadnaPozicija" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Bruto Plata</label>
+        <input asp-for="BrutoPlata_RSD" class="form-control" />
+    </div>
+</form>
