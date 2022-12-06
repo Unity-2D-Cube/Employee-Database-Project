@@ -15,7 +15,7 @@
         </div>
     </div>
 
-<br ><br >
+<br /><br />
 
 <table class="table table-bordered table-striped" style="width:100%">
     <thead>
@@ -27,16 +27,22 @@
                 Prezime
             </th>
             <th>
+                Adresa
+            </th>
+            <th>
                 RadnaPozicija
             </th>
             <th>
-                NetoPlata
+                NetoPlata_RSD
             </th>
             <th>
-                BrutoPlata
+                NetoPlata_EUR
             </th>
             <th>
-                DataumZaposlenja
+                NetoPlata_USD
+            </th>
+            <th>
+                BrutoPlata_RSD
             </th>
         </tr>
     </thead>
@@ -58,6 +64,12 @@
                 </td>
                 <td width="30%">
                     @obj.NetoPlata_RSD
+                </td>
+                <td width="30%">
+                    @obj.NetoPlata_USD
+                </td>
+                <td width="30%">
+                    @obj.NetoPlata_EUR
                 </td>
                 <td width="30%">
                     @obj.BrutoPlata_RSD

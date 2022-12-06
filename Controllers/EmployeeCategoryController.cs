@@ -26,5 +26,16 @@ namespace Test_Projekat_Web.Controllers
         {
             return View();
         }
+
+        //POST
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Create(EmployeeCategory obj)
+        {
+            _db.EmployeeCategories.Add(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
     }
 }

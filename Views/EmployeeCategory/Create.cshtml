@@ -8,22 +8,40 @@
     </div>
     <div class="mb-3">
         <label asp-for="Ime"></label>
-        <input asp-for="Ime" class="form-control" />
+        <input asp-for="Ime" class="form-control bg-dark text-light" style="width:200px" />
     </div>
     <div class="mb-3">
         <label>Prezime</label>
-        <input asp-for="Prezime" class="form-control" />
+        <input asp-for="Prezime" class="form-control bg-dark text-light" style="width:200px" />
     </div>
     <div class="mb-3">
         <label>Adresa</label>
-        <input asp-for="Adresa" class="form-control" />
+        <input asp-for="Adresa" class="form-control bg-dark text-light" style="width:480px" />
     </div>
     <div class="mb-3">
         <label>Radna Pozicija</label>
-        <input asp-for="RadnaPozicija" class="form-control" />
+        <input asp-for="RadnaPozicija" class="form-control bg-dark text-light" style="width:300px" />
     </div>
     <div class="mb-3">
-        <label>Bruto Plata</label>
-        <input asp-for="BrutoPlata_RSD" class="form-control" />
+        <label>Neto Plata RSD</label>
+        <input asp-for="NetoPlata_RSD" class="form-control bg-dark text-light" style="width:250px" />
     </div>
+    <div class="mb-3">
+        <label>Neto Plata EUR</label>
+        <input asp-for="NetoPlata_EUR" class="form-control bg-dark text-light" style="width:250px" />
+    </div>
+    <div class="mb-3">
+        <label>Neto Plata USD</label>
+        <input asp-for="NetoPlata_USD" class="form-control bg-dark text-light" style="width:250px" />
+    </div>
+    <div class="mb-3">
+        <label>Bruto Plata RSD</label>
+        <input asp-for="BrutoPlata_RSD" class="form-control bg-dark text-light" style="width:250px" />
+    </div>
+    <button type="submit" class="btn btn-primary" style="width:150px"> <i class="bi bi-person-fill-check"></i> &nbsp; Sačuvaj Unos</button>
+    <a asp-controller="EmployeeCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
+        Idi nazad na lisu zaposlenih
+    </a>
+
+    
 </form>
