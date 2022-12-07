@@ -32,8 +32,9 @@ namespace Test_Projekat_Web.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(EmployeeCategory obj)
         {
+            obj.NetoPlata_RSD = obj.BrutoPlata_RSD;
             if (ModelState.IsValid)
-            {
+            {            
             _db.EmployeeCategories.Add(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");

@@ -17,7 +17,7 @@ namespace Test_Projekat_Web.Models
         public string? RadnaPozicija { get; set; }
 
         [Required]
-        public int NetoPlata_RSD { get; set; }
+        public  int NetoPlata_RSD { get; set; }
 
         public int NetoPlata_EUR { get; set; }
 
