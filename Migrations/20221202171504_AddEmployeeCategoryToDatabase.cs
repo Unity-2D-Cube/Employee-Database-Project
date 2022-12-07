@@ -25,6 +25,7 @@ namespace TestProjekatWeb.Migrations
                     NetoPlata_EUR = table.Column<int>(type: "int", nullable: false),
                     NetoPlata_USD = table.Column<int>(type: "int", nullable: false),
                     BrutoPlata_RSD = table.Column<int>(type: "int", nullable: false),
+                    
                 },
                 constraints: table =>
                 {

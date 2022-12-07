@@ -9,34 +9,40 @@
     <div class="mb-3">
         <label asp-for="Ime"></label>
         <input asp-for="Ime" class="form-control bg-dark text-light" style="width:200px" />
+        <span asp-validation-for="Ime" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label>Prezime</label>
         <input asp-for="Prezime" class="form-control bg-dark text-light" style="width:200px" />
+        <span asp-validation-for="Prezime" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label>Adresa</label>
         <input asp-for="Adresa" class="form-control bg-dark text-light" style="width:480px" />
+        <span asp-validation-for="Adresa" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label>Radna Pozicija</label>
         <input asp-for="RadnaPozicija" class="form-control bg-dark text-light" style="width:300px" />
+        <span asp-validation-for="RadnaPozicija" class="text-danger"></span>
     </div>
-    <div class="mb-3">
+@*    <div class="mb-3">
         <label>Neto Plata RSD</label>
         <input asp-for="NetoPlata_RSD" class="form-control bg-dark text-light" style="width:250px" />
-    </div>
-    <div class="mb-3">
+        <span asp-validation-for="NetoPlata_RSD" class="text-danger"></span>
+    </div>*@
+@*    <div class="mb-3">
         <label>Neto Plata EUR</label>
         <input asp-for="NetoPlata_EUR" class="form-control bg-dark text-light" style="width:250px" />
     </div>
     <div class="mb-3">
         <label>Neto Plata USD</label>
         <input asp-for="NetoPlata_USD" class="form-control bg-dark text-light" style="width:250px" />
-    </div>
+    </div>*@
     <div class="mb-3">
         <label>Bruto Plata RSD</label>
-        <input asp-for="BrutoPlata_RSD" class="form-control bg-dark text-light" style="width:250px" />
+        <input asp-for="BrutoPlata_RSD" class="form-control bg-dark text-light" style="width:250px" />      
+        <span asp-validation-for="BrutoPlata_RSD" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary" style="width:150px"> <i class="bi bi-person-fill-check"></i> &nbsp; Sačuvaj Unos</button>
     <a asp-controller="EmployeeCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">

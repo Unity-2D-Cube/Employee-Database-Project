@@ -32,9 +32,13 @@ namespace Test_Projekat_Web.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(EmployeeCategory obj)
         {
+            if (ModelState.IsValid)
+            {
             _db.EmployeeCategories.Add(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
     }
