@@ -32,13 +32,13 @@ namespace Test_Projekat_Web.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(EmployeeCategory obj)
         {
-            int i = 0123456789;
+           /* int i = 0123456789;
             
             if (obj.Ime == i.ToString("0123456789"))
             {
                 ModelState.AddModelError("CustomError", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva!");
             }
-
+            */
             if (ModelState.IsValid)
             {
             obj.NetoPlata_RSD = obj.BrutoPlata_RSD;    
