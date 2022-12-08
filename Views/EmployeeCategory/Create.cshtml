@@ -6,6 +6,7 @@
         </div>
         <hr />
     </div>
+    <div asp-validation-summary="All"></div>
     <div class="mb-3">
         <label asp-for="Ime"></label>
         <input asp-for="Ime" class="form-control bg-dark text-light" style="width:200px" />
@@ -47,7 +48,12 @@
     <button type="submit" class="btn btn-primary" style="width:150px"> <i class="bi bi-person-fill-check"></i> &nbsp; Sačuvaj Unos</button>
     <a asp-controller="EmployeeCategory" asp-action="Index" class="btn btn-secondary" style="width:150px">
         Idi nazad na lisu zaposlenih
-    </a>
-
-    
+    </a>    
 </form>
+
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
