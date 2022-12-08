@@ -24,6 +24,5 @@ namespace Test_Projekat_Web.Models
         public int NetoPlata_USD { get; set; }
         [Required]
         public int BrutoPlata_RSD { get; set; }
-
     }
 }
