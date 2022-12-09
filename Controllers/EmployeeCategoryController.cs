@@ -32,26 +32,22 @@ namespace Test_Projekat_Web.Controllers
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(EmployeeCategory obj)
         {
-            //int i = 0123456789;
+            if (obj.Ime == obj.Prezime)
+            {
+                ModelState.AddModelError("Ime", "PAŽNJA! Ime i Prezime ne mogu da imaju istu vrednost!");
+            } 
 
             foreach (char c in obj.Ime)
             {
                 if (!char.IsLetter(c))
                     ModelState.AddModelError("Ime", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva,razmaka ili znakova!");
 
-               foreach(char v in obj.Prezime)
-               {
+                foreach(char v in obj.Prezime)
+                {
                 if(!char.IsLetter(v))
                     ModelState.AddModelError("Prezime", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva,razmaka ili znakova!");
-               }
-
+                }
             }
-
-            //if (obj.Ime)
-            //{
-            //    ModelState.AddModelError("CustomError", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva!");
-            //}
-            
             if (ModelState.IsValid)
             {
             obj.NetoPlata_RSD = obj.BrutoPlata_RSD;    
@@ -61,18 +57,5 @@ namespace Test_Projekat_Web.Controllers
             }
             return View(obj);
         }
-
-        //public bool IsAllAlphabetic(string obj)
-        //{
-        //    foreach (char c in obj)
-        //    {
-        //        if (!char.IsLetter(c))
-        //            return false;
-        //    }
-
-        //    return true;
-        //}
-
-
     }
 }
