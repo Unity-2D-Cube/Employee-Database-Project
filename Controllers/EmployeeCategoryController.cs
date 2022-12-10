@@ -7,11 +7,12 @@ namespace Test_Projekat_Web.Controllers
     public class EmployeeCategoryController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly ExchangeRateProvider _exchangeRateProvider;
 
-        
-        public EmployeeCategoryController(ApplicationDbContext db)
+        public EmployeeCategoryController(ApplicationDbContext db, ExchangeRateProvider exchangeRateProvider)
         {
             _db = db;
+            _exchangeRateProvider = exchangeRateProvider;
         }
 
         public IActionResult Index()
@@ -56,6 +57,20 @@ namespace Test_Projekat_Web.Controllers
             return RedirectToAction("Index");
             }
             return View(obj);
+        }
+
+        public async Task<IActionResult> Sum(EmployeeCategory obj)
+        {
+            //your other code
+            await _exchangeRateProvider.UpdateRatesAsync();
+            var usdRate = _exchangeRateProvider.Rate.USD;
+            var eurRate = _exchangeRateProvider.Rate.EUR;
+            obj.NetoPlata_EUR = ((int)eurRate);
+            obj.NetoPlata_USD = ((int)usdRate);
+
+
+            //check for null or do some calculation with this.
+            return View();
         }
     }
 }
