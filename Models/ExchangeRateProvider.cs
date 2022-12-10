@@ -40,6 +40,7 @@ namespace Test_Projekat_Web.Models
 
         public class ConversionRate
         {
+            public double RSD { get; set; }
             public double EUR { get; set; }
             public double USD { get; set; }
         }
