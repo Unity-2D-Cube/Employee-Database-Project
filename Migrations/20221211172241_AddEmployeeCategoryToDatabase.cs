@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -21,16 +20,15 @@ namespace TestProjekatWeb.Migrations
                     Prezime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Adresa = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RadnaPozicija = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NetoPlata_RSD = table.Column<int>(type: "int", nullable: false),
-                    NetoPlata_EUR = table.Column<int>(type: "int", nullable: false),
-                    NetoPlata_USD = table.Column<int>(type: "int", nullable: false),
-                    BrutoPlata_RSD = table.Column<int>(type: "int", nullable: false),
-                    
+                    NetoPlataRSD = table.Column<double>(name: "NetoPlata_RSD", type: "float", nullable: false),
+                    NetoPlataEUR = table.Column<double>(name: "NetoPlata_EUR", type: "float", nullable: false),
+                    NetoPlataUSD = table.Column<double>(name: "NetoPlata_USD", type: "float", nullable: false),
+                    BrutoPlataRSD = table.Column<double>(name: "BrutoPlata_RSD", type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EmployeeCategories", x => x.Id);
-                });;
+                });
         }
 
         /// <inheritdoc />

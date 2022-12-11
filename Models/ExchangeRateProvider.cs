@@ -1,22 +1,22 @@
-﻿using Newtonsoft.Json;
+﻿
 namespace Test_Projekat_Web.Models
 {
     public class ExchangeRateProvider
     {
         public ConversionRate? Rate { get; private set; }
 
-        private const string ApiUrl = "https://v6.exchangerate-api.com/v6/cfd41856c3411698f03a4ece/latest/USD";
+        private const string ApiUrl = "https://v6.exchangerate-api.com/v6/cfd41856c3411698f03a4ece/latest/RSD";
 
         public ExchangeRateProvider()
         {
         }
 
-        public async Task UpdateRatesAsync()
+        public async Task UpdateRatesAsync(string foreignCurrency = "USD", string foreignCurrency_02 = "EUR")
         {
             try
             {
                 using var httpClient = new HttpClient();
-                API_Obj? jsonResponse = await httpClient.GetFromJsonAsync<API_Obj>(ApiUrl);
+                API_Obj? jsonResponse = await httpClient.GetFromJsonAsync<API_Obj>(string.Format(ApiUrl, foreignCurrency, foreignCurrency_02));
                 Rate = jsonResponse?.conversion_rates;
             }
             catch (Exception ex)
@@ -40,7 +40,6 @@ namespace Test_Projekat_Web.Models
 
         public class ConversionRate
         {
-            public double RSD { get; set; }
             public double EUR { get; set; }
             public double USD { get; set; }
         }
