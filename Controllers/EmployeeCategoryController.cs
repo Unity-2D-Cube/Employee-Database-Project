@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using Test_Projekat_Web.Data;
 using Test_Projekat_Web.Models;
 
@@ -38,19 +39,21 @@ namespace Test_Projekat_Web.Controllers
                 ModelState.AddModelError("Ime", "PAŽNJA! Ime i Prezime ne mogu da imaju istu vrednost!");
             }
 
-            foreach (char c in obj.Ime)
+            foreach (char Ime in obj.Ime)
             {
-                if (!char.IsLetter(c))
+                if (!char.IsLetter(Ime))
                     ModelState.AddModelError("Ime", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva,razmaka ili znakova!");
 
-                foreach (char v in obj.Prezime)
+                foreach (char Prezime in obj.Prezime)
                 {
-                    if (!char.IsLetter(v))
+                    if (!char.IsLetter(Prezime))
                         ModelState.AddModelError("Prezime", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva,razmaka ili znakova!");
                 }
             }
+
             if (ModelState.IsValid)
             {
+
 
                 //your other code
                 var foreignCurrency = "EUR";
@@ -73,5 +76,47 @@ namespace Test_Projekat_Web.Controllers
 
             return View(obj);
         }
+
+
+        public List<EmployeeCategory> users = new List<EmployeeCategory>
+        {
+
+             
+            //new EmployeeCategory { Id = 1, Ime = "" ,Prezime = "", Adresa = "", RadnaPozicija = "" ,  BrutoPlata_RSD  = 0.0f,
+            //    NetoPlata_RSD = 0.0f , NetoPlata_EUR = 0.0f , NetoPlata_USD = 0.0f },
+  
+           
+            
+
+        };
+
+        public IActionResult ExportToCSV()
+        {
+            
+            var builder = new StringBuilder();
+            builder.AppendLine("Id,Ime,Prezime,Adresa,RadnaPozicija,BrutoPlata_RSD,NetoPlata_RSD,NetoPlata_EUR,NetoPlata_USD");
+            foreach (var user in users)
+            {
+                builder.AppendLine($"{user.Id},{user.Ime}, {user.Prezime}, {user.Adresa}, {user.RadnaPozicija}" +
+                    $",{user.BrutoPlata_RSD}, {user.NetoPlata_RSD},{user.NetoPlata_EUR},{user.NetoPlata_USD}");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "ListaZaposlenih.csv");
+        } 
+        public IActionResult ExportTOxlsx()
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Id,Ime,Prezime,Adresa,RadnaPozicija,BrutoPlata_RSD,NetoPlata_RSD,NetoPlata_EUR,NetoPlata_USD");
+            foreach (var user in users)
+            {
+                builder.AppendLine($"{user.Id},{user.Ime}, {user.Prezime}, {user.Adresa}, {user.RadnaPozicija}" +
+                    $",{user.BrutoPlata_RSD}, {user.NetoPlata_RSD},{user.NetoPlata_EUR},{user.NetoPlata_USD}");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/xlsx", "ListaZaposlenih.xlsx");
+        }
+
+
+
     }
 }

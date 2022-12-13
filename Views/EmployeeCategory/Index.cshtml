@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EmployeeCategory>
+﻿@model IEnumerable<EmployeeCategory> 
 @{
     ViewData["Title"] = "Index";
 }
@@ -11,6 +11,15 @@
         <div class="col-6 text-end">
             <a asp-controller="EmployeeCategory" asp-action="Create"class="btn btn-primary">
                <i class="bi bi-person-plus"></i> &nbsp; Dodaj Novog Zaposlenog
+            </a>
+        </div>
+        <div class="col-6 text-start">
+            <a asp-controller="EmployeeCategory" asp-action="ExportToCSV"class="btn" btn-primary">
+                <<i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.csv)
+            </a>
+        </div>        <div class="col-6 text-start">
+            <a asp-controller="EmployeeCategory" asp-action="ExportToxlsx" class="btn" btn-primary">
+                <<i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)
             </a>
         </div>
     </div>
