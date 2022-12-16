@@ -2,6 +2,13 @@
 using System.Text;
 using Test_Projekat_Web.Data;
 using Test_Projekat_Web.Models;
+using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Data;
+using System.Linq;
+using ClosedXML.Excel;
+
+
 
 namespace Test_Projekat_Web.Controllers
 {
@@ -10,15 +17,22 @@ namespace Test_Projekat_Web.Controllers
         private readonly ApplicationDbContext _db;
         private readonly ExchangeRateProvider _exchangeRateProvider;
 
-        public EmployeeCategoryController(ApplicationDbContext db, ExchangeRateProvider exchangeRateProvider)
+        private ApplicationDbContext Context { get; }
+
+        public EmployeeCategoryController(ApplicationDbContext db, ExchangeRateProvider exchangeRateProvider, ApplicationDbContext _context)
         {
             _db = db;
             _exchangeRateProvider = exchangeRateProvider;
+
+            Context = _context;
         }
 
         public IActionResult Index()
         {
             IEnumerable<EmployeeCategory> objEmployeeCategoryList = _db.EmployeeCategories;
+
+            List<EmployeeCategory> employeeCategories = (from employee in Context.EmployeeCategories.Take(9)
+                                                         select employee).ToList();
 
             return View(objEmployeeCategoryList);
         }
@@ -78,45 +92,83 @@ namespace Test_Projekat_Web.Controllers
         }
 
 
-        public List<EmployeeCategory> users = new List<EmployeeCategory>
-        {
-
-             
-            //new EmployeeCategory { Id = 1, Ime = "" ,Prezime = "", Adresa = "", RadnaPozicija = "" ,  BrutoPlata_RSD  = 0.0f,
-            //    NetoPlata_RSD = 0.0f , NetoPlata_EUR = 0.0f , NetoPlata_USD = 0.0f },
-  
-           
-            
-
-        };
-
-        public IActionResult ExportToCSV()
-        {
-            
-            var builder = new StringBuilder();
-            builder.AppendLine("Id,Ime,Prezime,Adresa,RadnaPozicija,BrutoPlata_RSD,NetoPlata_RSD,NetoPlata_EUR,NetoPlata_USD");
-            foreach (var user in users)
-            {
-                builder.AppendLine($"{user.Id},{user.Ime}, {user.Prezime}, {user.Adresa}, {user.RadnaPozicija}" +
-                    $",{user.BrutoPlata_RSD}, {user.NetoPlata_RSD},{user.NetoPlata_EUR},{user.NetoPlata_USD}");
-            }
-
-            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "ListaZaposlenih.csv");
-        } 
+        [HttpPost]
         public IActionResult ExportTOxlsx()
         {
-            var builder = new StringBuilder();
-            builder.AppendLine("Id,Ime,Prezime,Adresa,RadnaPozicija,BrutoPlata_RSD,NetoPlata_RSD,NetoPlata_EUR,NetoPlata_USD");
-            foreach (var user in users)
+            DataTable dt = new DataTable("Grid");
+            dt.Columns.AddRange(new DataColumn[9] { new DataColumn("Id"),
+                                        new DataColumn("Ime"),
+                                        new DataColumn("Prezime"),
+                                        new DataColumn("Adresa"),
+                                        new DataColumn("Radna Pozicija"),
+                                        new DataColumn("Neto Plata RSD"),
+                                        new DataColumn("Neto Plata EUR"),
+                                        new DataColumn("Neto Plata USD"),
+                                        new DataColumn("Bruto Plata RSD")
+
+            });
+
+
+            var employeeCategories = from employee in Context.EmployeeCategories.Take(10)
+                                     select employee;
+
+            foreach (var employeeCategory in employeeCategories)
             {
-                builder.AppendLine($"{user.Id},{user.Ime}, {user.Prezime}, {user.Adresa}, {user.RadnaPozicija}" +
-                    $",{user.BrutoPlata_RSD}, {user.NetoPlata_RSD},{user.NetoPlata_EUR},{user.NetoPlata_USD}");
+                dt.Rows.Add(employeeCategory.Id, employeeCategory.Ime, employeeCategory.Prezime, employeeCategory.Adresa,
+                    employeeCategory.RadnaPozicija, employeeCategory.NetoPlata_RSD, employeeCategory.NetoPlata_EUR,
+                    employeeCategory.NetoPlata_USD, employeeCategory.BrutoPlata_RSD);
             }
 
-            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/xlsx", "ListaZaposlenih.xlsx");
-        }
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ListaZaposlenih.xlsx");
+                }
+            }
+
+            //[HttpPost]
+            //public IActionResult ExportTOcsv()
+            //{
+            //    DataTable dt = new DataTable("Grid");
+            //    dt.Columns.AddRange(new DataColumn[9] { new DataColumn("Id"),
+            //                            new DataColumn("Ime"),
+            //                            new DataColumn("Prezime"),
+            //                            new DataColumn("Adresa"),
+            //                            new DataColumn("Radna Pozicija"),
+            //                            new DataColumn("Neto Plata RSD"),
+            //                            new DataColumn("Neto Plata EUR"),
+            //                            new DataColumn("Neto Plata USD"),
+            //                            new DataColumn("Bruto Plata RSD")
+
+            //    });
+
+
+            //    var employeeCategories = from employee in Context.EmployeeCategories.Take(10)
+            //                             select employee;
+
+            //    foreach (var employeeCategory in employeeCategories)
+            //    {
+            //        dt.Rows.Add(employeeCategory.Id, employeeCategory.Ime, employeeCategory.Prezime, employeeCategory.Adresa,
+            //            employeeCategory.RadnaPozicija, employeeCategory.NetoPlata_RSD, employeeCategory.NetoPlata_EUR,
+            //            employeeCategory.NetoPlata_USD, employeeCategory.BrutoPlata_RSD);
+            //    }
+
+            //    using (XLWorkbook wb = new XLWorkbook())
+            //    {
+            //        wb.Worksheets.Add(dt);
+            //        using (MemoryStream stream = new MemoryStream())
+            //        {
+            //            wb.SaveAs(stream);
+            //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ListaZaposlenih.csv");
+            //        }
+            //    }
 
 
 
+
+            }   
     }
-}
+}   
