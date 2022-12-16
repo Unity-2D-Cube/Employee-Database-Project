@@ -1,6 +1,11 @@
-﻿@model IEnumerable<EmployeeCategory> 
+﻿@using Test_Projekat_Web.Models;
+@model IEnumerable<EmployeeCategory> 
 @{
     ViewData["Title"] = "Index";
+}
+@addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    
 }
 
 <div class="container p-3">
@@ -13,15 +18,27 @@
                <i class="bi bi-person-plus"></i> &nbsp; Dodaj Novog Zaposlenog
             </a>
         </div>
-        <div class="col-6 text-start">
+@*        <div class="col-6 text-start">
             <a asp-controller="EmployeeCategory" asp-action="ExportToCSV"class="btn" btn-primary">
                 <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.csv)
             </a>
-        </div>        <div class="col-6 text-start">
-            <a asp-controller="EmployeeCategory" asp-action="ExportToxlsx" class="btn" btn-primary">
+        </div>  *@      
+@*        <div class="col-6 text-start">
+            <a asp-controller="EmployeeCategory" asp-action="Export" class="btn" btn-primary">
                 <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)
             </a>
+        </div>*@
+        <div class="col-6 text-start">
+            <form method="post" asp-controller="EmployeeCategory" asp-action="Export">
+                <input type="submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)
+            </form>
         </div>
+        <div class="col-6 text-end">
+            <form method="post" asp-controller="EmployeeCategory" asp-action="OnPostGeneratePDF">
+                <input type ="submit" value="Izvezi" /><i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.pdf)
+            </form>
+        </div>
+
     </div>
 
 <br /><br />
