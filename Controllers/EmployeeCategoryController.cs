@@ -42,6 +42,7 @@ namespace Test_Projekat_Web.Controllers
 
         public IActionResult Index2()
         {
+
             return View(this.Context.EmployeeCategories.Take(9).ToList());
         }
 
@@ -117,7 +118,7 @@ namespace Test_Projekat_Web.Controllers
             });
 
 
-            var employeeCategories = from employee in Context.EmployeeCategories.Take(10)
+            var employeeCategories = from employee in Context.EmployeeCategories.Take(9)
                                      select employee;
 
             foreach (var employeeCategory in employeeCategories)
@@ -138,65 +139,96 @@ namespace Test_Projekat_Web.Controllers
             }                        
         }
 
-        //[HttpPost]
-        //public FileResult ExportToPDF()
-        //{
-        //    List<EmployeeCategory> employees = (from employee in Context.EmployeeCategories.Take(9)
-        //                              select new[] {
-        //                              employee.Id,
-        //                              employee.Ime,
-        //                              employee.Prezime,
-        //                              employee.Adresa,
-        //                              employee.RadnaPozicija,
-        //                              employee.NetoPlata_RSD,
-        //                              employee.NetoPlata_EUR,
-        //                              employee.NetoPlata_USD,
-        //                              employee.BrutoPlata_RSD
-        //                         }).ToList<EmployeeCategory>();
+        [HttpPost]
+        public FileResult ExportToPDF()
+        {
 
-        //    //Building an HTML string.
-        //    StringBuilder sb = new StringBuilder();
+            //List<EmployeeCategory> employees = (from employee in Context.EmployeeCategories.Take(9)
+            //                                     new
+            //                                    {
 
-        //    //Table start.
-        //    sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial; font-size: 10pt;'>");
+            //                                        employee.Id,
+            //                                        employee.Ime,
+            //                                        employee.Prezime,
+            //                                        employee.Adresa,
+            //                                        employee.RadnaPozicija,
+            //                                        employee.NetoPlata_RSD,
+            //                                        employee.NetoPlata_EUR,
+            //                                        employee.NetoPlata_USD,
+            //                                        employee.BrutoPlata_RSD
+            //                                    }).ToList<EmployeeCategory>();
 
-        //    //Building the Header row.
-        //    sb.Append("<tr>");
-        //    sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>CustomerID</th>");
-        //    sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>ContactName</th>");
-        //    sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>City</th>");
-        //    sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Country</th>");
-        //    sb.Append("</tr>");
 
-        //    //Building the Data rows.
-        //    for (int i = 0; i < employees.Count; i++)
-        //    {
-        //        string[] customer = (string[])employees[i];
-        //        sb.Append("<tr>");
-        //        for (int j = 0; j < customer.Length; j++)
-        //        {
-        //            //Append data.
-        //            sb.Append("<td style='border: 1px solid #ccc'>");
-        //            sb.Append(customer[j]);
-        //            sb.Append("</td>");
-        //        }
-        //        sb.Append("</tr>");
-        //    }
+            var employees = new List<EmployeeCategory>();
+            //employees.Add(new(: 1, name: "John", age: 25));
+            //employees.Add(new(id: 0, ime: "Elon", prezime: "Musk", adresa: "TwitterHQ", radnaPozicija: "CEO",
+            //    netoPlata_RSD: 1, netoPlata_EUR: 1, netoPlata_USD: 1, brutoPlata_RSD: 1));
 
-        //    //Table end.
-        //    sb.Append("</table>");
+            var query = employees.AsQueryable().Take(9).Select(employee => new
+            {
+                employee.Id,
+                employee.Ime,
+                employee.Prezime,
+                employee.Adresa,
+                employee.RadnaPozicija,
+                employee.NetoPlata_RSD,
+                employee.NetoPlata_EUR,
+                employee.NetoPlata_USD,
+                employee.BrutoPlata_RSD
+            }).ToList();
 
-        //    using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
-        //    {
-        //        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        //        PdfWriter writer = new PdfWriter(byteArrayOutputStream);
-        //        PdfDocument pdfDocument = new PdfDocument(writer);
-        //        pdfDocument.SetDefaultPageSize(PageSize.A4);
-        //        HtmlConverter.ConvertToPdf(stream, pdfDocument);
-        //        pdfDocument.Close();
-        //        return File(byteArrayOutputStream.ToArray(), "application/pdf", "Grid.pdf");
-        //    }
-        //}
+
+            //Building an HTML string.
+            var sb = new StringBuilder();
+
+            //Table start.
+            sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial; font-size: 10pt;'>");
+
+            //Building the Header row.
+            sb.Append("<tr>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Id</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Ime</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Prezime</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Adresa</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>RadnaPozicija</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>NetoPlataRSD</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>NetoPlataEUR</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>NetoPlataUSD</th>");
+            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>BrutoPlataRSD</th>");
+            sb.Append("</tr>");
+
+            //Building the Data rows.
+
+            query.ForEach(employee =>
+            {
+                sb.Append("<tr>");
+                foreach (var propertyInfo in employee.GetType().GetProperties())
+                {
+                    sb.Append("<td style='border: 1px solid #ccc'>");
+                    sb.Append(propertyInfo.GetValue(employee));
+                    sb.Append("</td>");
+                }
+                sb.Append("</tr>");
+            });
+
+
+
+
+
+            //Table end.
+            sb.Append("</table>");
+
+            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
+            {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+                PdfDocument pdfDocument = new PdfDocument(writer);
+                pdfDocument.SetDefaultPageSize(PageSize.A4);
+                HtmlConverter.ConvertToPdf(stream, pdfDocument);
+                pdfDocument.Close();
+                return File(byteArrayOutputStream.ToArray(), "application/pdf", "ListaZaposlenih.pdf");
+            }
+        }
 
 
     }
