@@ -5,13 +5,13 @@ namespace Test_Projekat_Web.Models
     {
         public ConversionRate? Rate { get; private set; }
 
-        private const string ApiUrl = "https://v6.exchangerate-api.com/v6/cfd41856c3411698f03a4ece/latest/RSD"; //Currency you want to exchange salary in this example RSD. Otherwise Will return 404 error if you put ".../latest/{0}"
+        private const string ApiUrl = "https://v6.exchangerate-api.com/v6/cfd41856c3411698f03a4ece/latest/RSD"; // Currency you want to exchange salary in this example RSD. Otherwise Will return 404 error if you put ".../latest/{0}"
 
         public ExchangeRateProvider()
         {
         }
 
-        public async Task UpdateRatesAsync(string foreignCurrency = "USD", string foreignCurrency_02 = "EUR") //Update Rates for USD & EUR
+        public async Task UpdateRatesAsync(string foreignCurrency = "USD", string foreignCurrency_02 = "EUR") // Update Rates for USD & EUR
         {
             try
             {

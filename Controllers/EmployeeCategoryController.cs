@@ -84,7 +84,7 @@ namespace Test_Projekat_Web.Controllers
                 await _exchangeRateProvider.UpdateRatesAsync(foreignCurrency_02);
                 var rates = _exchangeRateProvider.Rate;
 
-                var grossSalary = obj.BrutoPlata_RSD; //salary in RSD
+                var grossSalary = obj.BrutoPlata_RSD; // Salary in RSD
                 var usdSalary = rates.USD * grossSalary;
                 var eurSalary = rates.EUR * grossSalary;
 
@@ -154,13 +154,13 @@ namespace Test_Projekat_Web.Controllers
               BrutoPlata_RSD = m.BrutoPlata_RSD
             }).ToList();            
 
-            //Building an HTML string.
+            // Building an HTML string.
             var sb = new StringBuilder();
 
-            //Table start.
+            // Table start.
             sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial; font-size: 10pt;'>");
 
-            //Building the Header row.
+            // Building the Header row.
             sb.Append("<tr>");
             sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Id</th>");
             sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Ime</th>");
@@ -173,7 +173,7 @@ namespace Test_Projekat_Web.Controllers
             sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>BrutoPlataRSD</th>");
             sb.Append("</tr>");
 
-            //Building the Data rows.
+            // Building the Data rows.
             query.ForEach(employee =>
             {
                 sb.Append("<tr>");
@@ -186,7 +186,7 @@ namespace Test_Projekat_Web.Controllers
                 sb.Append("</tr>");
             });
 
-            //Table end.
+            // Table end.
             sb.Append("</table>");
 
             using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
