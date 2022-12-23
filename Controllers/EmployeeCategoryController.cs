@@ -42,8 +42,7 @@ namespace Test_Projekat_Web.Controllers
 
         public IActionResult Index2()
         {
-
-            return View(this.Context.EmployeeCategories.Take(9).ToList());
+              return View(this.Context.EmployeeCategories.Take(9).ToList());
         }
 
         //GET
@@ -142,41 +141,18 @@ namespace Test_Projekat_Web.Controllers
         [HttpPost]
         public FileResult ExportToPDF()
         {
-
-            //List<EmployeeCategory> employees = (from employee in Context.EmployeeCategories.Take(9)
-            //                                     new
-            //                                    {
-
-            //                                        employee.Id,
-            //                                        employee.Ime,
-            //                                        employee.Prezime,
-            //                                        employee.Adresa,
-            //                                        employee.RadnaPozicija,
-            //                                        employee.NetoPlata_RSD,
-            //                                        employee.NetoPlata_EUR,
-            //                                        employee.NetoPlata_USD,
-            //                                        employee.BrutoPlata_RSD
-            //                                    }).ToList<EmployeeCategory>();
-
-
-            var employees = new List<EmployeeCategory>();
-            //employees.Add(new(: 1, name: "John", age: 25));
-            //employees.Add(new(id: 0, ime: "Elon", prezime: "Musk", adresa: "TwitterHQ", radnaPozicija: "CEO",
-            //    netoPlata_RSD: 1, netoPlata_EUR: 1, netoPlata_USD: 1, brutoPlata_RSD: 1));
-
-            var query = employees.AsQueryable().Take(9).Select(employee => new
+            var query = Context.EmployeeCategories.Take(9).Select(m => new EmployeeCategory
             {
-                employee.Id,
-                employee.Ime,
-                employee.Prezime,
-                employee.Adresa,
-                employee.RadnaPozicija,
-                employee.NetoPlata_RSD,
-                employee.NetoPlata_EUR,
-                employee.NetoPlata_USD,
-                employee.BrutoPlata_RSD
-            }).ToList();
-
+              Id = m.Id,
+              Ime = m.Ime,
+              Prezime = m.Prezime,
+              Adresa = m.Adresa,
+              RadnaPozicija = m.RadnaPozicija,
+              NetoPlata_RSD = m.NetoPlata_RSD,
+              NetoPlata_EUR = m.NetoPlata_EUR,
+              NetoPlata_USD = m.NetoPlata_USD,
+              BrutoPlata_RSD = m.BrutoPlata_RSD
+            }).ToList();            
 
             //Building an HTML string.
             var sb = new StringBuilder();
@@ -198,7 +174,6 @@ namespace Test_Projekat_Web.Controllers
             sb.Append("</tr>");
 
             //Building the Data rows.
-
             query.ForEach(employee =>
             {
                 sb.Append("<tr>");
@@ -210,10 +185,6 @@ namespace Test_Projekat_Web.Controllers
                 }
                 sb.Append("</tr>");
             });
-
-
-
-
 
             //Table end.
             sb.Append("</table>");
@@ -229,7 +200,6 @@ namespace Test_Projekat_Web.Controllers
                 return File(byteArrayOutputStream.ToArray(), "application/pdf", "ListaZaposlenih.pdf");
             }
         }
-
 
     }
 }   
