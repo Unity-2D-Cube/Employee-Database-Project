@@ -23,6 +23,7 @@ namespace Test_Projekat_Web.Controllers
         private readonly ExchangeRateProvider _exchangeRateProvider;
 
         private ApplicationDbContext Context { get; }
+        
 
         public EmployeeCategoryController(ApplicationDbContext db, ExchangeRateProvider exchangeRateProvider, ApplicationDbContext _context)
         {
@@ -203,27 +204,47 @@ namespace Test_Projekat_Web.Controllers
             }
         }
 
-        public IActionResult ExportAndSandPDF()
-        {
-            //create the mail message
-            MailMessage mail = new MailMessage();
+        //protected void Button1_Click(object sender, EventArgs e)
+        //{
+            
+        //    var em = sender;
+        //    string email = "test@test.test";
+        //    string subject = "Lista Zaposlenih";
+        //    string attachment = (File.)
+        //    em = (GetType(), "mailto", "parent.location='mailto:"+ subject + email + "'", true);
+        //}
 
-            //set the addresses
-            mail.From = new MailAddress("me@mycompany.com");
-            mail.To.Add("you@yourcompany.com");
 
-            //set the content
-            mail.Subject = "This is an email";
-            mail.Body = "this content is in the body";
 
-            //add an attachment from the filesystem
-            mail.Attachments.Add(new Attachment(@"*ListaZaposlenih.pdf"));
 
-            //send the message
-            SmtpClient smtp = new SmtpClient("0.0.0.0");
-            smtp.Send(mail);
-            return ExportToPDF();
-        }
+
+        //public IActionResult ExportAndSandPDF()
+        //{
+
+
+        //    //create the mail message
+        //    MailMessage mail = new MailMessage();
+
+        //    //set the addresses
+        //    mail.From = new MailAddress("me@mycompany.com");
+        //    mail.To.Add("you@yourcompany.com");
+
+        //    //set the content
+        //    mail.Subject = "This is an email";
+        //    mail.Body = "this content is in the body";
+
+        //    //add an attachment from the filesystem
+        //   // mail.Attachments.Add(new Attachment(@"*ListaZaposlenih.pdf"));
+
+        //    //send the message
+        //    SmtpClient smtp = new SmtpClient("127.0.0.1");
+        //    smtp.Send(mail);
+        //    return ExportToPDF();
+        //}
+
+
+
+
 
         //[HttpPost]
         //public IActionResult SendEmail(EmployeeCategory obj)
