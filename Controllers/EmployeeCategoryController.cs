@@ -12,6 +12,8 @@ using iText.Html2pdf;
 using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using Win32Mapi;
+using System.Net.Mail;
 
 namespace Test_Projekat_Web.Controllers
 {
@@ -201,5 +203,38 @@ namespace Test_Projekat_Web.Controllers
             }
         }
 
+        public IActionResult ExportAndSandPDF()
+        {
+            //create the mail message
+            MailMessage mail = new MailMessage();
+
+            //set the addresses
+            mail.From = new MailAddress("me@mycompany.com");
+            mail.To.Add("you@yourcompany.com");
+
+            //set the content
+            mail.Subject = "This is an email";
+            mail.Body = "this content is in the body";
+
+            //add an attachment from the filesystem
+            mail.Attachments.Add(new Attachment(@"*ListaZaposlenih.pdf"));
+
+            //send the message
+            SmtpClient smtp = new SmtpClient("0.0.0.0");
+            smtp.Send(mail);
+            return ExportToPDF();
+        }
+
+        //[HttpPost]
+        //public IActionResult SendEmail(EmployeeCategory obj)
+        //{
+        //    var mapi = new SimpleMapi();
+        //    mapi.AddRecipient(name: "Ime Primaoca e-pošte", addr: null, cc: false);
+        //    mapi.Attach(filepath: "c:\\ListaZaposlenih.pdf");
+        //    mapi.Send(subject: "Lista Zaposlenih", noteText: "");
+
+
+        //    return View(obj);
+        //}
     }
 }   

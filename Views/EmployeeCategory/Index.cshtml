@@ -30,15 +30,19 @@
         </div>*@
         <div class="col-6 text-start">
             <form method="post" asp-controller="EmployeeCategory" asp-action="Export">
-                <input type="submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)
+                <input type="submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)<i class="bi bi-filetype-xlsx"></i> &nbsp;
+            </form>
+        </div>
+        <div class="col-6 text-md-center">
+            <form method="post" asp-controller="EmployeeCategory" asp-action="ExportToPDF">
+                <input type="submit" id="btn-Submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
             </form>
         </div>
         <div class="col-6 text-end">
-            <form method="post" asp-controller="EmployeeCategory" asp-action="ExportToPDF">
-                <input type ="submit" id="btn-Submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.pdf)
+            <form method="post" asp-controller="EmployeeCategory" asp-action="ExportAndSandPDF">
+                <input type="submit" id="btn-Submit" value="Izvezi" /> <i class="bi bi-download"></i> <i class="bi bi-plus-lg"></i> <i class="bi bi-envelope-plus"></i> &nbsp; Izvezi I Pošalji Podateke o zaposlenima(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
             </form>
         </div>
-
     </div>
 
 <br /><br />
