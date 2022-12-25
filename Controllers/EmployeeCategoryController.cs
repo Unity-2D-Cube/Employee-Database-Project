@@ -2,18 +2,12 @@
 using System.Text;
 using Test_Projekat_Web.Data;
 using Test_Projekat_Web.Models;
-using Microsoft.EntityFrameworkCore;
-using System.IO;
 using System.Data;
-using System.Linq;
 using ClosedXML.Excel;
-using System.IO;
 using iText.Html2pdf;
 using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using Win32Mapi;
-using System.Net.Mail;
 
 namespace Test_Projekat_Web.Controllers
 {
@@ -204,58 +198,13 @@ namespace Test_Projekat_Web.Controllers
             }
         }
 
-        //protected void Button1_Click(object sender, EventArgs e)
-        //{
-            
-        //    var em = sender;
-        //    string email = "test@test.test";
-        //    string subject = "Lista Zaposlenih";
-        //    string attachment = (File.)
-        //    em = (GetType(), "mailto", "parent.location='mailto:"+ subject + email + "'", true);
-        //}
+        protected void Button1_Click(object sender, EventArgs e)
+        {
 
-
-
-
-
-        //public IActionResult ExportAndSandPDF()
-        //{
-
-
-        //    //create the mail message
-        //    MailMessage mail = new MailMessage();
-
-        //    //set the addresses
-        //    mail.From = new MailAddress("me@mycompany.com");
-        //    mail.To.Add("you@yourcompany.com");
-
-        //    //set the content
-        //    mail.Subject = "This is an email";
-        //    mail.Body = "this content is in the body";
-
-        //    //add an attachment from the filesystem
-        //   // mail.Attachments.Add(new Attachment(@"*ListaZaposlenih.pdf"));
-
-        //    //send the message
-        //    SmtpClient smtp = new SmtpClient("127.0.0.1");
-        //    smtp.Send(mail);
-        //    return ExportToPDF();
-        //}
-
-
-
-
-
-        //[HttpPost]
-        //public IActionResult SendEmail(EmployeeCategory obj)
-        //{
-        //    var mapi = new SimpleMapi();
-        //    mapi.AddRecipient(name: "Ime Primaoca e-pošte", addr: null, cc: false);
-        //    mapi.Attach(filepath: "c:\\ListaZaposlenih.pdf");
-        //    mapi.Send(subject: "Lista Zaposlenih", noteText: "");
-
-
-        //    return View(obj);
-        //}
+            var em = sender;
+            string email = "test@test.test";
+            string subject = "Lista Zaposlenih";           
+            em = (GetType(), "mailto", "parent.location='mailto:" + subject + email + "'", true);
+        }
     }
 }   

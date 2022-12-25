@@ -18,31 +18,19 @@
                <i class="bi bi-person-plus"></i> &nbsp; Dodaj Novog Zaposlenog
             </a>
         </div>
-@*        <div class="col-6 text-start">
-            <a asp-controller="EmployeeCategory" asp-action="ExportToCSV"class="btn" btn-primary">
-                <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.csv)
-            </a>
-        </div>  *@      
-@*        <div class="col-6 text-start">
-            <a asp-controller="EmployeeCategory" asp-action="Export" class="btn" btn-primary">
-                <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)
-            </a>
-        </div>*@
+
         <div class="col-6 text-start">
             <form method="post" asp-controller="EmployeeCategory" asp-action="Export">
                 <input type="submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)<i class="bi bi-filetype-xlsx"></i> &nbsp;
             </form>
         </div>
-        <div class="col-6 text-md-center">
+        <div class="col-6 text-end"> 
             <form method="post" asp-controller="EmployeeCategory" asp-action="ExportToPDF">
-                <input type="submit" id="btn-Submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
+                <input type="submit" id="btn-Submit" value="Izvezi" />
+                <input id="Button1" type="button" value="Pošalji" onclick = "parent.location='mailto:abc@abc.com'" />
+                <i class="bi bi-download"></i> <i class="bi bi-plus-lg"></i> <i class="bi bi-envelope-plus"></i> &nbsp; Izvezi I Pošalji Podateke o zaposlenima(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
             </form>
         </div>
-@*        <div class="col-6 text-end">
-            <form> <input id="Button1" type="button" value="button" onclick = "parent.location='mailto:abc@abc.com'" />
-                <input type="submit" id="btn-Submit" value="Izvezi" /> <i class="bi bi-download"></i> <i class="bi bi-plus-lg"></i> <i class="bi bi-envelope-plus"></i> &nbsp; Izvezi I Pošalji Podateke o zaposlenima(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
-            </form>
-        </div>*@
     </div>
 
 <br /><br />

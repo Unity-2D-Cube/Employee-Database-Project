@@ -1,2 +1,2 @@
 # Test-Projekat-Web
-Gemini Software - Test Projekat
+Lista Zaposlenih - Test Projekat
