@@ -197,14 +197,5 @@ namespace Test_Projekat_Web.Controllers
                 return File(byteArrayOutputStream.ToArray(), "application/pdf", "ListaZaposlenih.pdf");
             }
         }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-
-            var em = sender;
-            string email = "test@test.test";
-            string subject = "Lista Zaposlenih";           
-            em = (GetType(), "mailto", "parent.location='mailto:" + subject + email + "'", true);
-        }
     }
 }   
