@@ -1,2 +1,2 @@
-# Test-Projekat-Web
-Lista Zaposlenih - Test Projekat
+# Test-Project-Web
+List of employees - Test Project
