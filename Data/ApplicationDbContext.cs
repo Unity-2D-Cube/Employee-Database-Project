@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Test_Projekat_Web.Models;
+using Test_Project_Web.Models;
 
-namespace Test_Projekat_Web.Data
+namespace Test_Project_Web.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,27 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace Test_Projekat_Web.Models
+namespace Test_Project_Web.Models
 {
     public class EmployeeCategory
     {
         [Key]
         public int Id { get; set; }
         [Required]
-        public string? Ime { get; set; }
+        public string? Name { get; set; }
         [Required]
-        public string? Prezime { get; set; }
+        public string? Lastname { get; set; }
         [Required]
-        public string? Adresa { get; set; }
+        public string? Address { get; set; }
         [Required]
-        public string? RadnaPozicija { get; set; }
+        public string? Role { get; set; }
 
         [Required]
-        public  double NetoPlata_RSD { get; set; }
+        public  double NetSalary_RSD { get; set; }
         
-        public double NetoPlata_EUR { get; set; }
+        public double NetSalary_EUR { get; set; }
 
-        public double NetoPlata_USD { get; set; }
+        public double NetSalary_USD { get; set; }
         [Required]
-        public double BrutoPlata_RSD { get; set; }
+        public double GrossSalary_RSD { get; set; }
 
     }
 }

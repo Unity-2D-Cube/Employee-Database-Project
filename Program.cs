@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Test_Projekat_Web.Data;
-using Test_Projekat_Web.Models;
+using Test_Project_Web.Data;
+using Test_Project_Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
     ));
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddRazorPages();
+builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ExchangeRateProvider>();
 var app = builder.Build();
 

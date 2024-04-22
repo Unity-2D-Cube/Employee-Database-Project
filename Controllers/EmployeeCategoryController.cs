@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using Test_Projekat_Web.Data;
-using Test_Projekat_Web.Models;
+using Test_Project_Web.Data;
+using Test_Project_Web.Models;
 using System.Data;
 using ClosedXML.Excel;
-using iText.Html2pdf;
-using iText.IO.Source;
-using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 
-namespace Test_Projekat_Web.Controllers
+namespace Test_Project_Web.Controllers
 {
     public class EmployeeCategoryController : Controller
     {
@@ -53,20 +51,20 @@ namespace Test_Projekat_Web.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create(EmployeeCategory obj)
         {
-            if (obj.Ime == obj.Prezime)
+            if (obj.Name == obj.Lastname)
             {
-                ModelState.AddModelError("Ime", "PAŽNJA! Ime i Prezime ne mogu da imaju istu vrednost!");
+                ModelState.AddModelError("Name", "Warning! Name and Lastname can't have same values!");
             }
 
-            foreach (char Ime in obj.Ime)
+            foreach (char Name in obj.Name)
             {
-                if (!char.IsLetter(Ime))
-                    ModelState.AddModelError("Ime", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva,razmaka ili znakova!");
+                if (!char.IsLetter(Name))
+                    ModelState.AddModelError("Name", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
 
-                foreach (char Prezime in obj.Prezime)
+                foreach (char Lastname in obj.Lastname)
                 {
-                    if (!char.IsLetter(Prezime))
-                    ModelState.AddModelError("Prezime", "PAŽNJA! Ovo je nevažeći unos! Pokušajte ponovo bez unosa brojeva,razmaka ili znakova!");
+                    if (!char.IsLetter(Lastname))
+                    ModelState.AddModelError("Lastname", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
                 }
             }
 
@@ -81,13 +79,13 @@ namespace Test_Projekat_Web.Controllers
                 await _exchangeRateProvider.UpdateRatesAsync(foreignCurrency_02);
                 var rates = _exchangeRateProvider.Rate;
 
-                var grossSalary = obj.BrutoPlata_RSD; // Salary in RSD
-                var usdSalary = rates.USD * grossSalary;
+                var grossSalary = obj.GrossSalary_RSD; // Salary in RSD
                 var eurSalary = rates.EUR * grossSalary;
+                var usdSalary = rates.USD * grossSalary;
 
-                obj.NetoPlata_EUR = eurSalary;
-                obj.NetoPlata_USD = usdSalary;
-                obj.NetoPlata_RSD = obj.BrutoPlata_RSD;
+                obj.NetSalary_EUR = eurSalary;
+                obj.NetSalary_USD = usdSalary;
+                obj.NetSalary_RSD = obj.GrossSalary_RSD;
                 _db.EmployeeCategories.Add(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
@@ -102,14 +100,14 @@ namespace Test_Projekat_Web.Controllers
         {
             DataTable dt = new DataTable("Grid");
             dt.Columns.AddRange(new DataColumn[9] { new DataColumn("Id"),
-                                        new DataColumn("Ime"),
-                                        new DataColumn("Prezime"),
-                                        new DataColumn("Adresa"),
-                                        new DataColumn("Radna Pozicija"),
-                                        new DataColumn("Neto Plata RSD"),
-                                        new DataColumn("Neto Plata EUR"),
-                                        new DataColumn("Neto Plata USD"),
-                                        new DataColumn("Bruto Plata RSD")
+                                        new DataColumn("Name"),
+                                        new DataColumn("Lastname"),
+                                        new DataColumn("Address"),
+                                        new DataColumn("Role"),
+                                        new DataColumn("Net Salary RSD"),
+                                        new DataColumn("Net Salary EUR"),
+                                        new DataColumn("Net Salary USD"),
+                                        new DataColumn("Gross Salary RSD")
 
             });
 
@@ -119,9 +117,9 @@ namespace Test_Projekat_Web.Controllers
 
             foreach (var employeeCategory in employeeCategories)
             {
-                dt.Rows.Add(employeeCategory.Id, employeeCategory.Ime, employeeCategory.Prezime, employeeCategory.Adresa,
-                    employeeCategory.RadnaPozicija, employeeCategory.NetoPlata_RSD, employeeCategory.NetoPlata_EUR,
-                    employeeCategory.NetoPlata_USD, employeeCategory.BrutoPlata_RSD);
+                dt.Rows.Add(employeeCategory.Id, employeeCategory.Name, employeeCategory.Lastname, employeeCategory.Address,
+                    employeeCategory.Role, employeeCategory.NetSalary_RSD, employeeCategory.NetSalary_EUR,
+                    employeeCategory.NetSalary_USD, employeeCategory.GrossSalary_RSD);
             }
 
             using (XLWorkbook wb = new XLWorkbook())
@@ -130,7 +128,7 @@ namespace Test_Projekat_Web.Controllers
                 using (MemoryStream stream = new MemoryStream())
                 {
                     wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ListaZaposlenih.xlsx");                  
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmployeeList.xlsx");                  
                 }
             }                        
         }
@@ -138,63 +136,53 @@ namespace Test_Projekat_Web.Controllers
         [HttpPost]
         public FileResult ExportToPDF()
         {
-            var query = Context.EmployeeCategories.Take(9).Select(m => new EmployeeCategory
+            // Retrieve employee data
+            var employees = Context.EmployeeCategories.Take(9).ToList();
+
+            // Create a new PDF document
+            using (MemoryStream ms = new MemoryStream())
             {
-              Id = m.Id,
-              Ime = m.Ime,
-              Prezime = m.Prezime,
-              Adresa = m.Adresa,
-              RadnaPozicija = m.RadnaPozicija,
-              NetoPlata_RSD = m.NetoPlata_RSD,
-              NetoPlata_EUR = m.NetoPlata_EUR,
-              NetoPlata_USD = m.NetoPlata_USD,
-              BrutoPlata_RSD = m.BrutoPlata_RSD
-            }).ToList();            
+                PdfWriter writer = new PdfWriter(ms);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
 
-            // Building an HTML string.
-            var sb = new StringBuilder();
+                // Add a table to the document
+                Table table = new Table(8).UseAllAvailableWidth();
 
-            // Table start.
-            sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial; font-size: 10pt;'>");
+                // Add table headers
+                table.AddHeaderCell("Name");
+                table.AddHeaderCell("LastName");
+                table.AddHeaderCell("Address");
+                table.AddHeaderCell("Role");
+                table.AddHeaderCell("Net Salary RSD");
+                table.AddHeaderCell("Net Salary EUR");
+                table.AddHeaderCell("Net Salary USD");
+                table.AddHeaderCell("Gross Salary RSD");
 
-            // Building the Header row.
-            sb.Append("<tr>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Id</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Ime</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Prezime</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Adresa</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>RadnaPozicija</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>NetoPlataRSD</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>NetoPlataEUR</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>NetoPlataUSD</th>");
-            sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>BrutoPlataRSD</th>");
-            sb.Append("</tr>");
-
-            // Building the Data rows.
-            query.ForEach(employee =>
-            {
-                sb.Append("<tr>");
-                foreach (var propertyInfo in employee.GetType().GetProperties())
+                // Add data to the table
+                foreach (var employee in employees)
                 {
-                    sb.Append("<td style='border: 1px solid #ccc'>");
-                    sb.Append(propertyInfo.GetValue(employee));
-                    sb.Append("</td>");
+                    table.AddCell(employee.Name);
+                    table.AddCell(employee.Lastname);
+                    table.AddCell(employee.Address);
+                    table.AddCell(employee.Role);
+                    table.AddCell(employee.NetSalary_RSD.ToString());
+                    table.AddCell(employee.NetSalary_EUR.ToString());
+                    table.AddCell(employee.NetSalary_USD.ToString());
+                    table.AddCell(employee.GrossSalary_RSD.ToString());
                 }
-                sb.Append("</tr>");
-            });
 
-            // Table end.
-            sb.Append("</table>");
+                // Add the table to the document
+                document.Add(table);
 
-            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
-            {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                PdfWriter writer = new PdfWriter(byteArrayOutputStream);
-                PdfDocument pdfDocument = new PdfDocument(writer);
-                pdfDocument.SetDefaultPageSize(PageSize.A4);
-                HtmlConverter.ConvertToPdf(stream, pdfDocument);
-                pdfDocument.Close();
-                return File(byteArrayOutputStream.ToArray(), "application/pdf", "ListaZaposlenih.pdf");
+                // Close the document
+                document.Close();
+
+                // Convert the document to a byte array
+                byte[] pdfBytes = ms.ToArray();
+
+                // Return the PDF file
+                return File(pdfBytes, "application/pdf", "EmployeeList.pdf");
             }
         }
     }

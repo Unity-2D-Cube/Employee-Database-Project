@@ -1,4 +1,4 @@
-﻿@using Test_Projekat_Web.Models;
+﻿@using Test_Project_Web.Models;
 @model IEnumerable<EmployeeCategory> 
 @{
     ViewData["Title"] = "Index";
@@ -11,23 +11,23 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary text-light">Lista Zaposlenih</h2>
+            <h2 class="text-primary text-light">Employee List</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-controller="EmployeeCategory" asp-action="Create"class="btn btn-primary">
-               <i class="bi bi-person-plus"></i> &nbsp; Dodaj Novog Zaposlenog
+               <i class="bi bi-person-plus"></i> &nbsp; Add New Employee
             </a>
         </div>
 
         <div class="col-6 text-start">
             <form method="post" asp-controller="EmployeeCategory" asp-action="Export">
-                <input type="submit" value="Izvezi" /> <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.xlsx)<i class="bi bi-filetype-xlsx"></i> &nbsp;
+                <input type="submit" value="Export" /> <i class="bi bi-download"></i> &nbsp; Export Employee Data(.xlsx)<i class="bi bi-filetype-xlsx"></i> &nbsp;
             </form>
         </div>
         <div class="col-6 text-end"> 
             <form method="post" asp-controller="EmployeeCategory" asp-action="ExportToPDF">
-                <input type="submit" id="btn-Submit" value="Izvezi" />
-                <i class="bi bi-download"></i> &nbsp; Izvezi Podateke o zaposlenima(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
+                <input type="submit" id="btn-Submit" value="Export" />
+                <i class="bi bi-download"></i> &nbsp; Export Employee Data(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
             </form>
         </div>
     </div>
@@ -38,28 +38,28 @@
     <thead>
         <tr>
             <th>
-                Ime
+                Name
             </th>
             <th>
-                Prezime
+                Lastname
             </th>
             <th>
-                Adresa
+                Address
             </th>
             <th>
-                RadnaPozicija
+                Role
             </th>
             <th>
-                NetoPlata_RSD
+                NetSalary_RSD
             </th>
             <th>
-                NetoPlata_EUR
+                NetSalary_EUR
             </th>
             <th>
-                NetoPlata_USD
+                NetSalary_USD
             </th>
             <th>
-                BrutoPlata_RSD
+                GrossSalary_RSD
             </th>
         </tr>
     </thead>
@@ -68,28 +68,28 @@
         {
             <tr>
                 <td width="30%">
-                    @obj.Ime
+                    @obj.Name
                 </td>
                 <td width="30%">
-                    @obj.Prezime
+                    @obj.Lastname
                 </td>
                 <td width="30%">
-                    @obj.Adresa
+                    @obj.Address
                 </td>
                 <td width="30%">
-                    @obj.RadnaPozicija
+                    @obj.Role
                 </td>
                 <td width="30%">
-                    @obj.NetoPlata_RSD
+                    @obj.NetSalary_RSD
                 </td>
                 <td width="30%">
-                    @obj.NetoPlata_USD
+                    @obj.NetSalary_EUR
                 </td>
                 <td width="30%">
-                    @obj.NetoPlata_EUR
+                    @obj.NetSalary_USD
                 </td>
                 <td width="30%">
-                    @obj.BrutoPlata_RSD
+                    @obj.GrossSalary_RSD
                 </td>                
             </tr>
         }

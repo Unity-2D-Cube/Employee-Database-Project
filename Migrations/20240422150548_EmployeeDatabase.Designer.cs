@@ -4,27 +4,27 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Test_Projekat_Web.Data;
+using Test_Project_Web.Data;
 
 #nullable disable
 
-namespace TestProjekatWeb.Migrations
+namespace Test_Project_Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221211172241_AddEmployeeCategoryToDatabase")]
-    partial class AddEmployeeCategoryToDatabase
+    [Migration("20240422150548_EmployeeDatabase")]
+    partial class EmployeeDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Test_Projekat_Web.Models.EmployeeCategory", b =>
+            modelBuilder.Entity("Test_Project_Web.Models.EmployeeCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,31 +32,31 @@ namespace TestProjekatWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Adresa")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("BrutoPlata_RSD")
+                    b.Property<double>("GrossSalary_RSD")
                         .HasColumnType("float");
 
-                    b.Property<string>("Ime")
+                    b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("NetoPlata_EUR")
-                        .HasColumnType("float");
-
-                    b.Property<double>("NetoPlata_RSD")
-                        .HasColumnType("float");
-
-                    b.Property<double>("NetoPlata_USD")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Prezime")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RadnaPozicija")
+                    b.Property<double>("NetSalary_EUR")
+                        .HasColumnType("float");
+
+                    b.Property<double>("NetSalary_RSD")
+                        .HasColumnType("float");
+
+                    b.Property<double>("NetSalary_USD")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
