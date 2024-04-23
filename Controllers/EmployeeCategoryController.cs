@@ -4,8 +4,10 @@ using Test_Project_Web.Models;
 using System.Data;
 using ClosedXML.Excel;
 using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
+using iText.Html2pdf;
+using iText.IO.Source;
+using iText.Kernel.Geom;
+using System.Text;
 
 namespace Test_Project_Web.Controllers
 {
@@ -15,7 +17,7 @@ namespace Test_Project_Web.Controllers
         private readonly ExchangeRateProvider _exchangeRateProvider;
 
         private ApplicationDbContext Context { get; }
-        
+
 
         public EmployeeCategoryController(ApplicationDbContext db, ExchangeRateProvider exchangeRateProvider, ApplicationDbContext _context)
         {
@@ -37,7 +39,7 @@ namespace Test_Project_Web.Controllers
 
         public IActionResult Index2()
         {
-              return View(this.Context.EmployeeCategories.Take(9).ToList());
+            return View(this.Context.EmployeeCategories.Take(9).ToList());
         }
 
         //GET
@@ -64,7 +66,7 @@ namespace Test_Project_Web.Controllers
                 foreach (char Lastname in obj.Lastname)
                 {
                     if (!char.IsLetter(Lastname))
-                    ModelState.AddModelError("Lastname", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
+                        ModelState.AddModelError("Lastname", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
                 }
             }
 
@@ -128,62 +130,72 @@ namespace Test_Project_Web.Controllers
                 using (MemoryStream stream = new MemoryStream())
                 {
                     wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmployeeList.xlsx");                  
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmployeeList.xlsx");
                 }
-            }                        
+            }
         }
 
         [HttpPost]
         public FileResult ExportToPDF()
         {
-            // Retrieve employee data
-            var employees = Context.EmployeeCategories.Take(9).ToList();
+            List<object> employees = (from employee in Context.EmployeeCategories.Take(9)
+                                      select new object[] {
+                                          employee.Name,
+                                          employee.Lastname,
+                                          employee.Address,
+                                          employee.Role,
+                                          employee.NetSalary_RSD,
+                                          employee.NetSalary_EUR,
+                                          employee.NetSalary_USD,
+                                          employee.GrossSalary_RSD
+                                     }).ToList<object>();
 
-            // Create a new PDF document
-            using (MemoryStream ms = new MemoryStream())
+            //Building an HTML string.
+            StringBuilder sb = new StringBuilder();
+
+            //Table start.
+            sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial;'>");
+
+            //Building the Header row.
+            sb.Append("<tr>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Name</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Lastname</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Address</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Role</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>NetSalary_RSD</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>NetSalary_EUR</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>NetSalary_USD</th>");
+            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>GrossSalary_RSD</th>");
+            sb.Append("</tr>");
+
+            //Building the Data rows.
+            for (int i = 0; i < employees.Count; i++)
             {
-                PdfWriter writer = new PdfWriter(ms);
-                PdfDocument pdf = new PdfDocument(writer);
-                Document document = new Document(pdf);
-
-                // Add a table to the document
-                Table table = new Table(8).UseAllAvailableWidth();
-
-                // Add table headers
-                table.AddHeaderCell("Name");
-                table.AddHeaderCell("LastName");
-                table.AddHeaderCell("Address");
-                table.AddHeaderCell("Role");
-                table.AddHeaderCell("Net Salary RSD");
-                table.AddHeaderCell("Net Salary EUR");
-                table.AddHeaderCell("Net Salary USD");
-                table.AddHeaderCell("Gross Salary RSD");
-
-                // Add data to the table
-                foreach (var employee in employees)
+                object[] employee = (object[])employees[i];
+                sb.Append("<tr>");
+                for (int j = 0; j < employee.Length; j++)
                 {
-                    table.AddCell(employee.Name);
-                    table.AddCell(employee.Lastname);
-                    table.AddCell(employee.Address);
-                    table.AddCell(employee.Role);
-                    table.AddCell(employee.NetSalary_RSD.ToString());
-                    table.AddCell(employee.NetSalary_EUR.ToString());
-                    table.AddCell(employee.NetSalary_USD.ToString());
-                    table.AddCell(employee.GrossSalary_RSD.ToString());
+                    //Append data.
+                    sb.Append("<td style='border: 1px solid #ccc'>");
+                    sb.Append(employee[j].ToString());
+                    sb.Append("</td>");
                 }
+                sb.Append("</tr>");
+            }
 
-                // Add the table to the document
-                document.Add(table);
+            //Table end.
+            sb.Append("</table>");
 
-                // Close the document
-                document.Close();
-
-                // Convert the document to a byte array
-                byte[] pdfBytes = ms.ToArray();
-
-                // Return the PDF file
-                return File(pdfBytes, "application/pdf", "EmployeeList.pdf");
+            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
+            {
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+                PdfDocument pdfDocument = new PdfDocument(writer);
+                pdfDocument.SetDefaultPageSize(PageSize.A3);
+                HtmlConverter.ConvertToPdf(stream, pdfDocument);
+                pdfDocument.Close();
+                return File(byteArrayOutputStream.ToArray(), "application/pdf", "EmployeeList.pdf");
             }
         }
     }
-}   
+}
