@@ -48,60 +48,86 @@ namespace Test_Project_Web.Controllers
             return View();
         }
 
-        //POST
-        [HttpPost]
-        [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Create(EmployeeCategory obj)
+        public IActionResult Delete()
         {
-            if (obj.Name == obj.Lastname)
-            {
-                ModelState.AddModelError("Name", "Warning! Name and Lastname can't have same values!");
-            }
-
-            foreach (char Name in obj.Name)
-            {
-                if (!char.IsLetter(Name))
-                    ModelState.AddModelError("Name", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
-
-                foreach (char Lastname in obj.Lastname)
-                {
-                    if (!char.IsLetter(Lastname))
-                        ModelState.AddModelError("Lastname", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
-                }
-            }
-
-            if (ModelState.IsValid)
-            {
-
-
-                //your other code
-                var foreignCurrency = "EUR";
-                var foreignCurrency_02 = "USD";
-                await _exchangeRateProvider.UpdateRatesAsync(foreignCurrency);
-                await _exchangeRateProvider.UpdateRatesAsync(foreignCurrency_02);
-                var rates = _exchangeRateProvider.Rate;
-
-                var grossSalary = obj.GrossSalary_RSD; // Salary in RSD
-                var eurSalary = rates.EUR * grossSalary;
-                var usdSalary = rates.USD * grossSalary;
-
-                obj.NetSalary_EUR = eurSalary;
-                obj.NetSalary_USD = usdSalary;
-                obj.NetSalary_RSD = obj.GrossSalary_RSD;
-                _db.EmployeeCategories.Add(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(obj);
+            return View();
         }
 
-
-        [HttpPost]
-        public IActionResult Export()
+        //// POST
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int Id)
         {
-            DataTable dt = new DataTable("Grid");
-            dt.Columns.AddRange(new DataColumn[9] { new DataColumn("Id"),
+            if (_db.EmployeeCategories == null)
+            {
+                return Problem("Entity set of _db is null.");
+            }
+            var employee = await _db.EmployeeCategories.FindAsync(Id);
+            if (employee != null)
+            {
+                _db.EmployeeCategories.Remove(employee);
+            }
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
+        }
+
+            //POST
+            [HttpPost]
+            [AutoValidateAntiforgeryToken]
+            public async Task<IActionResult> Create(EmployeeCategory obj)
+            {
+                if (obj.Name == obj.Lastname)
+                {
+                    ModelState.AddModelError("Name", "Warning! Name and Lastname can't have same values!");
+                }
+
+                foreach (char Name in obj.Name)
+                {
+                    if (!char.IsLetter(Name))
+                        ModelState.AddModelError("Name", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
+
+                    foreach (char Lastname in obj.Lastname)
+                    {
+                        if (!char.IsLetter(Lastname))
+                            ModelState.AddModelError("Lastname", "Warning! Invalid input detected! Please try again without entering numbers, spaces or special characters!");
+                    }
+                }
+
+                if (ModelState.IsValid)
+                {
+
+
+                    //your other code
+                    var foreignCurrency = "EUR";
+                    var foreignCurrency_02 = "USD";
+                    await _exchangeRateProvider.UpdateRatesAsync(foreignCurrency);
+                    await _exchangeRateProvider.UpdateRatesAsync(foreignCurrency_02);
+                    var rates = _exchangeRateProvider.Rate;
+
+                    var grossSalary = obj.GrossSalary_RSD; // Salary in RSD
+                    var eurSalary = rates.EUR * grossSalary;
+                    var usdSalary = rates.USD * grossSalary;
+
+                    obj.NetSalary_EUR = eurSalary;
+                    obj.NetSalary_USD = usdSalary;
+                    obj.NetSalary_RSD = obj.GrossSalary_RSD;
+                    _db.EmployeeCategories.Add(obj);
+                    _db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                return View(obj);
+            }
+
+
+            [HttpPost]
+            public IActionResult Export()
+            {
+                DataTable dt = new DataTable("Grid");
+                dt.Columns.AddRange(new DataColumn[9] { new DataColumn("Id"),
                                         new DataColumn("Name"),
                                         new DataColumn("Lastname"),
                                         new DataColumn("Address"),
@@ -114,32 +140,32 @@ namespace Test_Project_Web.Controllers
             });
 
 
-            var employeeCategories = from employee in Context.EmployeeCategories.Take(9)
-                                     select employee;
+                var employeeCategories = from employee in Context.EmployeeCategories.Take(9)
+                                         select employee;
 
-            foreach (var employeeCategory in employeeCategories)
-            {
-                dt.Rows.Add(employeeCategory.Id, employeeCategory.Name, employeeCategory.Lastname, employeeCategory.Address,
-                    employeeCategory.Role, employeeCategory.NetSalary_RSD, employeeCategory.NetSalary_EUR,
-                    employeeCategory.NetSalary_USD, employeeCategory.GrossSalary_RSD);
-            }
-
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                wb.Worksheets.Add(dt);
-                using (MemoryStream stream = new MemoryStream())
+                foreach (var employeeCategory in employeeCategories)
                 {
-                    wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmployeeList.xlsx");
+                    dt.Rows.Add(employeeCategory.Id, employeeCategory.Name, employeeCategory.Lastname, employeeCategory.Address,
+                        employeeCategory.Role, employeeCategory.NetSalary_RSD, employeeCategory.NetSalary_EUR,
+                        employeeCategory.NetSalary_USD, employeeCategory.GrossSalary_RSD);
+                }
+
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(dt);
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        wb.SaveAs(stream);
+                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmployeeList.xlsx");
+                    }
                 }
             }
-        }
 
-        [HttpPost]
-        public FileResult ExportToPDF()
-        {
-            List<object> employees = (from employee in Context.EmployeeCategories.Take(9)
-                                      select new object[] {
+            [HttpPost]
+            public FileResult ExportToPDF()
+            {
+                List<object> employees = (from employee in Context.EmployeeCategories.Take(9)
+                                          select new object[] {
                                           employee.Name,
                                           employee.Lastname,
                                           employee.Address,
@@ -150,52 +176,54 @@ namespace Test_Project_Web.Controllers
                                           employee.GrossSalary_RSD
                                      }).ToList<object>();
 
-            //Building an HTML string.
-            StringBuilder sb = new StringBuilder();
+                //Building an HTML string.
+                StringBuilder sb = new StringBuilder();
 
-            //Table start.
-            sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial;'>");
+                //Table start.
+                sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial;'>");
 
-            //Building the Header row.
-            sb.Append("<tr>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Name</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Lastname</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Address</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>Role</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>NetSalary_RSD</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>NetSalary_EUR</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>NetSalary_USD</th>");
-            sb.Append("<th style='background-color: #9BA0A5;border: 1px solid #ccc'>GrossSalary_RSD</th>");
-            sb.Append("</tr>");
-
-            //Building the Data rows.
-            for (int i = 0; i < employees.Count; i++)
-            {
-                object[] employee = (object[])employees[i];
+                //Building the Header row.
                 sb.Append("<tr>");
-                for (int j = 0; j < employee.Length; j++)
-                {
-                    //Append data.
-                    sb.Append("<td style='border: 1px solid #ccc'>");
-                    sb.Append(employee[j].ToString());
-                    sb.Append("</td>");
-                }
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>Name</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>Lastname</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>Address</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>Role</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>NetSalary_RSD</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>NetSalary_EUR</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>NetSalary_USD</th>");
+                sb.Append("<th style='background-color: #74BAFF;border: 1px solid #ccc'>GrossSalary_RSD</th>");
                 sb.Append("</tr>");
-            }
 
-            //Table end.
-            sb.Append("</table>");
+                //Building the Data rows.
+                for (int i = 0; i < employees.Count; i++)
+                {
+                    object[] employee = (object[])employees[i];
+                    sb.Append("<tr>");
+                    for (int j = 0; j < employee.Length; j++)
+                    {
+                        //Append data.
+                        sb.Append("<td style='border: 1px solid #ccc'>");
+                        sb.Append(employee[j].ToString());
+                        sb.Append("</td>");
+                    }
+                    sb.Append("</tr>");
+                }
 
-            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
-            {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                PdfWriter writer = new PdfWriter(byteArrayOutputStream);
-                PdfDocument pdfDocument = new PdfDocument(writer);
-                pdfDocument.SetDefaultPageSize(PageSize.A3);
-                HtmlConverter.ConvertToPdf(stream, pdfDocument);
-                pdfDocument.Close();
-                return File(byteArrayOutputStream.ToArray(), "application/pdf", "EmployeeList.pdf");
+                //Table end.
+                sb.Append("</table>");
+
+                using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
+                {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+                    PdfDocument pdfDocument = new PdfDocument(writer);
+                    pdfDocument.SetDefaultPageSize(PageSize.A3);
+                    HtmlConverter.ConvertToPdf(stream, pdfDocument);
+                    pdfDocument.Close();
+                    return File(byteArrayOutputStream.ToArray(), "application/pdf", "EmployeeList.pdf");
+                }
             }
-        }
+        
     }
 }
+

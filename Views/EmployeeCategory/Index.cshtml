@@ -13,18 +13,23 @@
         <div class="col-6">
             <h2 class="text-primary text-light">Employee List</h2>
         </div>
-        <div class="col-6 text-end">
+        <div class=" align-text-top">
             <a asp-controller="EmployeeCategory" asp-action="Create"class="btn btn-primary">
                <i class="bi bi-person-plus"></i> &nbsp; Add New Employee
             </a>
+        </div>        
+        <div class=" align-text-bottom">
+            <a asp-controller="EmployeeCategory" asp-action="Delete"class="btn btn-primary">
+               <i class="bi bi-person-dash"></i> &nbsp; Delete Employee
+            </a>
         </div>
 
-        <div class="col-6 text-start">
+        <div class=" align-text-bottom">
             <form method="post" asp-controller="EmployeeCategory" asp-action="Export">
                 <input type="submit" value="Export" /> <i class="bi bi-download"></i> &nbsp; Export Employee Data(.xlsx)<i class="bi bi-filetype-xlsx"></i> &nbsp;
             </form>
         </div>
-        <div class="col-6 text-end"> 
+        <div class=" align-text-bottom"> 
             <form method="post" asp-controller="EmployeeCategory" asp-action="ExportToPDF">
                 <input type="submit" id="btn-Submit" value="Export" />
                 <i class="bi bi-download"></i> &nbsp; Export Employee Data(.pdf)<i class="bi bi-filetype-pdf"></i> &nbsp;
@@ -37,6 +42,9 @@
 <table class="table table-bordered table-striped" style="width:100%">
     <thead>
         <tr>
+            <th>
+                Id
+            </th>
             <th>
                 Name
             </th>
@@ -67,6 +75,9 @@
         @foreach(var obj in Model)
         {
             <tr>
+                <td width="10%">
+                    @obj.Id
+                </td>
                 <td width="30%">
                     @obj.Name
                 </td>
